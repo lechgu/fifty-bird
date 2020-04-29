@@ -5,12 +5,8 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine AS final
+FROM lechgu/dab AS final
 
-COPY --from=build /build/* /usr/share/nginx/html/
-COPY boot.sh /
-RUN chmod +x /boot.sh && dos2unix /boot.sh
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf.template
-RUN touch /etc/nginx/conf.d/site.template
-CMD ["/boot.sh"]
+COPY --from=build /build/* /html/
+
+ENV DIR=/html
